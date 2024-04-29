@@ -33,7 +33,7 @@ void Variables::writebackup(double *t,char *despath)
 {
   static char filename[300];
 
-  sprintf(filename,"%s%s",despath,"/PointBackupData"); 
+  sprintf(filename,"%s%s",despath,"/PointBackupData_mod_2.csv"); 
   
   std::ofstream oo(filename,std::ios::app);
   if(!oo)
@@ -42,25 +42,25 @@ void Variables::writebackup(double *t,char *despath)
       exit(1);
     }
      
-  oo << (*t/1000) << "\t";              
-  oo << Volt<< "\t";   
-  oo << Volt2 << "\t";   
-  oo << Cai << "\t";     
-  oo << CaSR << "\t";
-  oo << Nai << "\t";
-  oo << Ki << "\t";
-  oo << M << "\t";       
-  oo << H << "\t";       
-  oo << J << "\t";       
-  oo << Xr1 << "\t";     
-  oo << Xr2 << "\t";     
-  oo << Xs << "\t";     
-  oo << S << "\t";       
-  oo << R << "\t";       
-  oo << D << "\t";      
-  oo << F << "\t";       
-  oo << FCa << "\t";      
-  oo << G << "\t";      
+  oo << (*t) << ",";              
+  oo << Volt<< ",";   
+  oo << Volt2 << ",";   
+  oo << Cai << ",";     
+  oo << CaSR << ",";
+  oo << Nai << ",";
+  oo << Ki << ",";
+  oo << M << ",";       
+  oo << H << ",";       
+  oo << J << ",";       
+  oo << Xr1 << ",";     
+  oo << Xr2 << ",";     
+  oo << Xs << ",";     
+  oo << S << ",";       
+  oo << R << ",";       
+  oo << D << ",";      
+  oo << F << ",";       
+  oo << FCa << ",";      
+  oo << G << ",";      
   oo << Itot;            
   oo << std::endl;
   oo.close();

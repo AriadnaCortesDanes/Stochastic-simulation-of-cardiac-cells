@@ -200,6 +200,65 @@ void Start(int argc, char *argv[])
     }
 }
 
+void write_headers(){
+
+	// Write header of currents.csv
+	static char s[200];
+	FILE *FF;
+	sprintf(s, "%s%s", despath, "/Currents_mod2.csv");
+    FF = fopen(s, "a");
+    fprintf(FF, "%s,", "time");
+    fprintf(FF, "%s,", "IKr");
+    fprintf(FF, "%s,", "IKs");
+    fprintf(FF, "%s,", "IK1");
+    fprintf(FF, "%s,", "Ito");
+    fprintf(FF, "%s,", "INa");
+    fprintf(FF, "%s,", "IbNa");
+    fprintf(FF, "%s,", "INaK");
+    fprintf(FF, "%s,", "ICaL");
+    fprintf(FF, "%s,", "IbCa");
+    fprintf(FF, "%s,", "INaCa");
+    fprintf(FF, "%s,", "Irel");
+    fprintf(FF, "%s", "Istim");
+    fprintf(FF, "\n");
+    fclose(FF);
+
+	 static char filename[300];
+
+  sprintf(filename,"%s%s",despath,"/PointBackupData_mod_2.csv"); 
+  
+  std::ofstream oo(filename,std::ios::app);
+  if(!oo)
+    {
+      printf("cannot open file %s\n",filename);
+      exit(1);
+    }
+     
+  oo << "time" << ",";              
+  oo << "Volt"<< ",";   
+  oo << "Volt2" << ",";   
+  oo << "Cai" << ",";     
+  oo << "CaSR" << ",";
+  oo << "Nai" << ",";
+  oo << "Ki" << ",";
+  oo << "M" << ",";       
+  oo << "H" << ",";       
+  oo << "J" << ",";       
+  oo << "Xr1" << ",";     
+  oo << "Xr2" << ",";     
+  oo << "Xs" << ",";     
+  oo << "S" << ",";       
+  oo << "R" << ",";       
+  oo << "D" << ",";      
+  oo << "F" << ",";       
+  oo << "FCa" << ",";      
+  oo << "G" << ",";      
+  oo << "Itot";            
+  oo << std::endl;
+  oo.close();
+
+}
+
 int main(int argc, char *argv[])
 {
   static double time=0;
@@ -210,10 +269,11 @@ int main(int argc, char *argv[])
   
   Variables Var(V_init,Cai_init,CaSR_init,Nai_init,Ki_init);
 
+  write_headers();
  
   for(step=0;time<=STOPTIME;step++)
     { 
-      time+=HT;
+      
 
 #ifdef DYNRESTPROTOCOL
       if(time>sum)
@@ -357,11 +417,13 @@ int main(int argc, char *argv[])
 #endif
 
 
-
       Step(&Var,HT,despath,&time,step,Istim);
+	  
      
       if(step % 250 ==0)
+		// std::cout<<Istim<<std::endl;
 	Var.writebackup(&time,despath);
+	time+=HT;
     }
   return 0;
 }
