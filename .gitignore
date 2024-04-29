@@ -32,4 +32,5 @@
 *.app
 
 # Dades
-PointBackupData
+*.csv
+*.m
