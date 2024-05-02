@@ -18,6 +18,7 @@ public:
   //states of voltage and time dependent gates
   //INa
   double   M;
+  int      Nm;
   double   H;
   double   J;
   //IKr

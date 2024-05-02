@@ -3,6 +3,7 @@
    the values of all currents are written to file. */
 
 #include "Header.h"
+#include <random>
 
 extern double knak;
 extern double KmNa;
@@ -50,6 +51,26 @@ extern double Vc;
 extern double Vsr;
 
 extern double period;
+
+// For binomial generation
+std::random_device rd;
+std::mt19937 gen(rd());
+
+double NTm = 100;
+
+
+double get_increment(double concentration, double Pinf,double tau,double deltat){
+  return deltat * ((Pinf/tau)*(1-concentration)-((1-Pinf)/tau)*concentration);
+}
+
+double get_binomial_increment(double Ng,double NTg, double alpha,double beta,double deltat){
+
+  std::binomial_distribution<int> bin_alpha(NTg-Ng, alpha*deltat);
+  std::binomial_distribution<int> bin_beta(Ng, beta*deltat);
+
+  return bin_alpha(gen)-bin_beta(gen);
+
+}
 
 void Step(Variables *V, double HT, char *despath, double *tt, int step, double Istim)
 {
@@ -110,8 +131,8 @@ void Step(Variables *V, double HT, char *despath, double *tt, int step, double I
   // double BH;
   double AJ;
   double BJ;
-  double AJ;
-  double BJ;
+  // double AJ;
+  // double BJ;
   double M_INF;
   double H_INF;
   double J_INF;
@@ -161,6 +182,7 @@ void Step(Variables *V, double HT, char *despath, double *tt, int step, double I
 
   // define all variables
 #define sm (*V).M
+#define Nm (*V).Nm
 #define sh (*V).H
 #define sj (*V).J
 #define sxr1 (*V).Xr1
@@ -362,19 +384,48 @@ void Step(Variables *V, double HT, char *despath, double *tt, int step, double I
 
   // Update gates
 
-  sm += HT * (AM*(1-sm)-BM*sm);
+  // sm += HT * (AM*(1-sm)-BM*sm);
   sh += HT * (AH*(1-sh)-BH*sh);
   sj += HT * (AJ*(1-sj)-BJ*sj);
   // sm = M_INF - (M_INF - sm) * exp(-HT / TAU_M);
   // sh = H_INF - (H_INF - sh) * exp(-HT / TAU_H);
   // sj = J_INF - (J_INF - sj) * exp(-HT / TAU_J);
-  sxr1 = Xr1_INF - (Xr1_INF - sxr1) * exp(-HT / TAU_Xr1);
-  sxr2 = Xr2_INF - (Xr2_INF - sxr2) * exp(-HT / TAU_Xr2);
-  sxs = Xs_INF - (Xs_INF - sxs) * exp(-HT / TAU_Xs);
-  ss = S_INF - (S_INF - ss) * exp(-HT / TAU_S);
-  sr = R_INF - (R_INF - sr) * exp(-HT / TAU_R);
-  sd = D_INF - (D_INF - sd) * exp(-HT / TAU_D);
-  sf = F_INF - (F_INF - sf) * exp(-HT / TAU_F);
+
+
+  // sxr1 = Xr1_INF - (Xr1_INF - sxr1) * exp(-HT / TAU_Xr1);
+  // sxr2 = Xr2_INF - (Xr2_INF - sxr2) * exp(-HT / TAU_Xr2);
+
+  sxr1 += get_increment(sxr1,Xr1_INF,TAU_Xr1,HT);
+  sxr2 += get_increment(sxr2,Xr2_INF,TAU_Xr2,HT);
+
+
+  // sxs = Xs_INF - (Xs_INF - sxs) * exp(-HT / TAU_Xs);
+  // ss = S_INF - (S_INF - ss) * exp(-HT / TAU_S);
+  // sr = R_INF - (R_INF - sr) * exp(-HT / TAU_R);
+  // sd = D_INF - (D_INF - sd) * exp(-HT / TAU_D);
+  // sf = F_INF - (F_INF - sf) * exp(-HT / TAU_F);
+
+  sxs += get_increment(sxs,Xs_INF,TAU_Xs,HT);
+  ss += get_increment(ss,S_INF,TAU_S,HT);
+  sr += get_increment(sr,R_INF,TAU_R,HT);
+  sd += get_increment(sd,D_INF,TAU_D,HT);
+  sf += get_increment(sf,F_INF,TAU_F,HT);
+
+
+  //////////////////// BINOMIALS ///////////////////////////
+
+  // sm += get_binomial_increment(sm,AM,BM,HT);
+  Nm += get_binomial_increment(Nm,NTm,AM,BM,HT);
+  sm = Nm/NTm;
+
+  // sm += HT * (AM*(1-sm)-BM*sm);
+  // sh += HT * (AH*(1-sh)-BH*sh);
+  // sj += HT * (AJ*(1-sj)-BJ*sj);
+  //////////////////////////////////////////////////////////
+
+
+
+
   fcaold = sfca;
   sfca = FCa_INF - (FCa_INF - sfca) * exptaufca;
   if (sfca > fcaold && (svolt) > -37)

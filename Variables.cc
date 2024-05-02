@@ -12,6 +12,7 @@ Variables::Variables(double V_init,double Cai_init,double CaSR_init,double Nai_i
   Nai=Nai_init;
   Ki=Ki_init;
   M= 0.;
+  Nm=0;
   H= 0.75;
   J= 0.75; 
   Xr1= 0.;
