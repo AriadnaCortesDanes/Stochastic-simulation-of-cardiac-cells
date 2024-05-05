@@ -68,6 +68,8 @@ double RTONF=(R*T)/F;
 
 //Cellular capacitance         
 double CAPACITANCE=0.185;
+double rho = 160; //ohm/cm
+double S = 0.2; // mm^(-1)
 
 //Parameters for currents
 //Parameters for IKr
@@ -119,7 +121,7 @@ double KpCa=0.0005;
 //Parameters for IpK;
 double GpK=0.0146;
 
-// Number of cells
+// Mesh of cells
 int n_cells = 10;
 
 /*------------------------------------------------------------------------------
@@ -270,6 +272,7 @@ int main(int argc, char *argv[])
   Start(argc,argv);
   
   std::vector<Variables> cells;
+  std::vector<double> potentials(n_cells,0); 
 
   for (int i = 0; i <n_cells; i++) {
 	cells.push_back(*(new Variables(V_init,Cai_init,CaSR_init,Nai_init,Ki_init)));
@@ -422,8 +425,22 @@ int main(int argc, char *argv[])
 	}
 #endif
 
-	for (auto cell: cells) {
-		Step(&cell,HT,despath,&time,step,Istim);
+	double last_potential = 0;
+	for (int i = 0; i <n_cells; i++) {
+		
+		double v_right, v_left;
+
+		if (i > 1) v_left = cells[i-1].Volt;
+		else v_left = 0;
+		if (i < n_cells -1 ) v_right = cells[i+1].Volt;
+		else v_right = 0;
+
+		double temp = cells[i].Volt;
+		Step(&cells[i],HT,despath,&time,step, i == 0? Istim : 0.0);
+
+		cells[i].Volt += (1.0/(rho*S*CAPACITANCE))*(v_right-last_potential);
+
+		last_potential = temp;
 	}	  
 
     if(step % 250 ==0) {
