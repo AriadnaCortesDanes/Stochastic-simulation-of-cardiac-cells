@@ -122,8 +122,8 @@ double KpCa=0.0005;
 double GpK=0.0146;
 
 // Mesh of cells
-int n_cells = 1;
-double dx = 0.01; // distance between cells, cm
+int n_cells = 100;
+double dx = 0.1; // distance between cells, cm
 
 /*------------------------------------------------------------------------------
                 PARAMETER FOR INTEGRATION
@@ -262,7 +262,7 @@ void write_headers(){
 		oo << "F_" << i << ",";       
 		oo << "FCa_" << i << ",";      
 		oo << "G_" << i << ",";      
-		oo << "Itot_";            
+		i == n_cells-1 ? oo << "Itot_"<< i: oo << "Itot_"<<i<<",";            
 	}
 	oo << std::endl;
 	oo.close();
@@ -430,23 +430,31 @@ int main(int argc, char *argv[])
 	}
 #endif
 
-	double last_potential = 0;
+	double V_left = -86.0;
 	for (int i = 0; i <n_cells; i++) {
 		
-		double v_right, v_left;
+		double v_right;
 
-		if (i > 1) v_left = cells[i-1].Volt;
-		else v_left = 0;
+		// if (i > 0) v_left = cells[i-1].Volt;
+		// else v_left = -86.2;
 		if (i < n_cells -1 ) v_right = cells[i+1].Volt;
-		else v_right = 0;
+		else v_right = -86.0;
 
-		double temp = cells[i].Volt;
+		double V_i = cells[i].Volt;
 		Step(&cells[i],HT,despath,&time,step, i == 0? Istim : 0.0);
 
-		//cells[i].Volt += (HT/(rho*S*CAPACITANCE))*(v_right-last_potential)/dx;
+		cells[i].Volt += HT* 0.00154*((v_right+V_left-2*V_i)/(dx*dx));
 
-		last_potential = temp;
+		// std::cout<< HT* (1/(rho*S*CAPACITANCE))*((v_right-last_potential)/(dx*dx))<<std::endl;
+
+		V_left = V_i;
+
+		// std::cout<<"Cell: "<<i<<std::endl<<HT* (1/(1000*rho*S*CAPACITANCE))*((v_right-last_potential)/(dx*dx))<<std::endl;
+		
+
 	}	  
+
+	// if (step ==5) return 0;
 
     if(step % 250 ==0) {
 		//std::cout<<time<<std::endl;
