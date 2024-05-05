@@ -30,7 +30,6 @@
 
 #include "Header.h"
 
-
 /*-----------------------------------------------------------------------------
   FLAG TO CHOOSE BETWEEN DYNAMIC AND S1S2 RESTITUTION PROTOCOL
 -----------------------------------------------------------------------------*/
@@ -178,6 +177,7 @@ int repeats=10;
 
 //destination path to put in output files
 char despath[200];
+char destfile[200];
 
 /*---------------------------------------------------------------------------*/
 
@@ -196,7 +196,11 @@ void Start(int argc, char *argv[])
     }
   else
     {
-      strcpy(despath,argv[1]);
+	  //std::filesystem::path dir = "Results/";
+	  //std::filesystem::create_directory(dir);
+	  //char temp[200] = "Results/";
+	  strcat(destfile,argv[1]);
+      //strcpy(despath,temp);
     }
 }
 
@@ -225,7 +229,7 @@ void write_headers(){
 
 	 static char filename[300];
 
-  sprintf(filename,"%s%s",despath,"/PointBackupData_mod_2.csv"); 
+  sprintf(filename,"%s%s","Results/", destfile); 
   
   std::ofstream oo(filename,std::ios::app);
   if(!oo)
@@ -422,7 +426,7 @@ int main(int argc, char *argv[])
      
       if(step % 250 ==0)
 		// std::cout<<Istim<<std::endl;
-	Var.writebackup(&time,despath);
+	Var.writebackup(&time,destfile);
 	time+=HT;
     }
   return 0;
