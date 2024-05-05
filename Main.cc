@@ -122,7 +122,7 @@ double KpCa=0.0005;
 double GpK=0.0146;
 
 // Mesh of cells
-int n_cells = 10;
+int n_cells = 3;
 double dx = 0.01; // distance between cells, cm
 
 /*------------------------------------------------------------------------------
@@ -211,20 +211,23 @@ void write_headers(){
 	static char s[200];
 	FILE *FF;
 	sprintf(s, "%s%s", despath, "/Currents_mod2.csv");
-    FF = fopen(s, "a");
-    fprintf(FF, "%s,", "time");
-    fprintf(FF, "%s,", "IKr");
-    fprintf(FF, "%s,", "IKs");
-    fprintf(FF, "%s,", "IK1");
-    fprintf(FF, "%s,", "Ito");
-    fprintf(FF, "%s,", "INa");
-    fprintf(FF, "%s,", "IbNa");
-    fprintf(FF, "%s,", "INaK");
-    fprintf(FF, "%s,", "ICaL");
-    fprintf(FF, "%s,", "IbCa");
-    fprintf(FF, "%s,", "INaCa");
-    fprintf(FF, "%s,", "Irel");
-    fprintf(FF, "%s", "Istim");
+    FF = fopen(s, "w");
+
+	for (int i = 0; i < n_cells; i++) {
+		fprintf(FF, "%s%i,", "time_", (char) i);
+		fprintf(FF, "%s,", "IKr_", (char) i);
+		fprintf(FF, "%s,", "IKs_", (char) i);
+		fprintf(FF, "%s,", "IK1_", (char) i);
+		fprintf(FF, "%s,", "Ito_", (char) i);
+		fprintf(FF, "%s,", "INa_", (char) i);
+		fprintf(FF, "%s,", "IbNa_", (char) i);
+		fprintf(FF, "%s,", "INaK_", (char) i);
+		fprintf(FF, "%s,", "ICaL_", (char) i);
+		fprintf(FF, "%s,", "IbCa_", (char) i);
+		fprintf(FF, "%s,", "INaCa_", (char) i);
+		fprintf(FF, "%s,", "Irel_", (char) i);
+		fprintf(FF, "%s", "Istim_", (char) i);
+	}
     fprintf(FF, "\n");
     fclose(FF);
 
@@ -232,36 +235,37 @@ void write_headers(){
 
   sprintf(filename,"%s%s",despath,"/PointBackupData_mod_2.csv"); 
   
-  std::ofstream oo(filename,std::ios::app);
+  std::ofstream oo(filename);
   if(!oo)
     {
       printf("cannot open file %s\n",filename);
       exit(1);
     }
-     
-  oo << "time" << ",";              
-  oo << "Volt"<< ",";   
-  oo << "Volt2" << ",";   
-  oo << "Cai" << ",";     
-  oo << "CaSR" << ",";
-  oo << "Nai" << ",";
-  oo << "Ki" << ",";
-  oo << "M" << ",";       
-  oo << "H" << ",";       
-  oo << "J" << ",";       
-  oo << "Xr1" << ",";     
-  oo << "Xr2" << ",";     
-  oo << "Xs" << ",";     
-  oo << "S" << ",";       
-  oo << "R" << ",";       
-  oo << "D" << ",";      
-  oo << "F" << ",";       
-  oo << "FCa" << ",";      
-  oo << "G" << ",";      
-  oo << "Itot";            
-  oo << std::endl;
-  oo.close();
-
+    
+	for (int i = 0; i < n_cells; i++) {
+		oo << "time_" << i << ",";              
+		oo << "Volt_"<< i << ",";   
+		oo << "Volt2_" << i << ",";   
+		oo << "Cai_" << i << ",";     
+		oo << "CaSR_" << i << ",";
+		oo << "Nai_" << i << ",";
+		oo << "Ki_" << i << ",";
+		oo << "M_" << i << ",";       
+		oo << "H_" << i << ",";       
+		oo << "J_" << i << ",";       
+		oo << "Xr1_" << i << ",";     
+		oo << "Xr2_" << i << ",";     
+		oo << "Xs_" << i << ",";     
+		oo << "S_" << i << ",";       
+		oo << "R_" << i << ",";       
+		oo << "D_" << i << ",";      
+		oo << "F_" << i << ",";       
+		oo << "FCa_" << i << ",";      
+		oo << "G_" << i << ",";      
+		oo << "Itot_";            
+	}
+	oo << std::endl;
+	oo.close();
 }
 
 int main(int argc, char *argv[])
@@ -279,7 +283,7 @@ int main(int argc, char *argv[])
 	cells.push_back(*(new Variables(V_init,Cai_init,CaSR_init,Nai_init,Ki_init)));
   }
 
-  //write_headers();
+  write_headers();
  
   for(step=0;time<=STOPTIME;step++)
     { 
@@ -439,7 +443,7 @@ int main(int argc, char *argv[])
 		double temp = cells[i].Volt;
 		Step(&cells[i],HT,despath,&time,step, i == 0? Istim : 0.0);
 
-		cells[i].Volt += (HT/(rho*S*CAPACITANCE))*(v_right-last_potential)/dx;
+		//cells[i].Volt += (HT/(rho*S*CAPACITANCE))*(v_right-last_potential)/dx;
 
 		last_potential = temp;
 	}	  
@@ -448,13 +452,12 @@ int main(int argc, char *argv[])
 		//std::cout<<time<<std::endl;
 		for (auto cell: cells) {
 			cell.writebackup(&time,despath);
-	
-			static char filename[300];
-			sprintf(filename,"%s%s",despath,"/PointBackupData_mod_2.csv"); 
-			std::ofstream oo(filename,std::ios::app);
-			oo << std::endl;
-			oo.close();
 		}	
+		static char filename[300];
+		sprintf(filename,"%s%s",despath,"/PointBackupData_mod_2.csv"); 
+		std::ofstream oo(filename,std::ios::app);
+		oo << std::endl;
+		oo.close();
 	} 
 	
 	time+=HT;
