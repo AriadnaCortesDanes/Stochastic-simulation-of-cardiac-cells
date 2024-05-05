@@ -17,9 +17,9 @@ def plot_main_analysis(data):
     axs[0].plot(data['time_0'],data['Volt_0'],label='Volt')
     axs[0].set(xlabel='Time [ms]', ylabel='Membrane potential [mV]')
     axs[0].legend(loc="upper left")
-    axs[1].plot(data['time_0'],data["M"],label="m")
-    axs[1].plot(data['time_0'],data["H"],label="h")
-    axs[1].plot(data['time_0'],data["J"],label="j")
+    axs[1].plot(data['time_0'],data["M_0"],label="m")
+    axs[1].plot(data['time_0'],data["H_0"],label="h")
+    axs[1].plot(data['time_0'],data["J_0"],label="j")
     axs[1].set(xlabel='Time [ms]', ylabel='Gating variables')
     axs[1].legend(loc="upper left")
     for ax in axs:
@@ -46,7 +46,7 @@ def plot_csv(filename):
 
 
 def main():
-    data = read_csv(f"prova/PointBackupData_mod_2.csv")
+    data = read_csv(f"csv/PointBackupData_mod_2.csv")
     plot_main_analysis(data)
    
 
