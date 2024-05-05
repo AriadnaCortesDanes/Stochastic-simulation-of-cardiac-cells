@@ -122,7 +122,7 @@ double KpCa=0.0005;
 double GpK=0.0146;
 
 // Mesh of cells
-int n_cells = 3;
+int n_cells = 1;
 double dx = 0.01; // distance between cells, cm
 
 /*------------------------------------------------------------------------------
@@ -215,18 +215,18 @@ void write_headers(){
 
 	for (int i = 0; i < n_cells; i++) {
 		fprintf(FF, "%s%i,", "time_", (char) i);
-		fprintf(FF, "%s,", "IKr_", (char) i);
-		fprintf(FF, "%s,", "IKs_", (char) i);
-		fprintf(FF, "%s,", "IK1_", (char) i);
-		fprintf(FF, "%s,", "Ito_", (char) i);
-		fprintf(FF, "%s,", "INa_", (char) i);
-		fprintf(FF, "%s,", "IbNa_", (char) i);
-		fprintf(FF, "%s,", "INaK_", (char) i);
-		fprintf(FF, "%s,", "ICaL_", (char) i);
-		fprintf(FF, "%s,", "IbCa_", (char) i);
-		fprintf(FF, "%s,", "INaCa_", (char) i);
-		fprintf(FF, "%s,", "Irel_", (char) i);
-		fprintf(FF, "%s", "Istim_", (char) i);
+		fprintf(FF, "%s%i,", "IKr_", (char) i);
+		fprintf(FF, "%s%i,", "IKs_", (char) i);
+		fprintf(FF, "%s%i,", "IK1_", (char) i);
+		fprintf(FF, "%s%i,", "Ito_", (char) i);
+		fprintf(FF, "%s%i,", "INa_", (char) i);
+		fprintf(FF, "%s%i,", "IbNa_", (char) i);
+		fprintf(FF, "%s%i,", "INaK_", (char) i);
+		fprintf(FF, "%s%i,", "ICaL_", (char) i);
+		fprintf(FF, "%s%i,", "IbCa_", (char) i);
+		fprintf(FF, "%s%i,", "INaCa_", (char) i);
+		fprintf(FF, "%s%i,", "Irel_", (char) i);
+		fprintf(FF, "%s%i", "Istim_", (char) i);
 	}
     fprintf(FF, "\n");
     fclose(FF);
