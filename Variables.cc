@@ -34,7 +34,7 @@ void Variables::writebackup(double *t,char *despath)
 {
   static char filename[300];
 
-  sprintf(filename,"%s%s","Results/", despath); 
+  sprintf(filename,"%s%s",despath,"/PointBackupData_mod_2.csv"); 
   
   std::ofstream oo(filename,std::ios::app);
   if(!oo)
