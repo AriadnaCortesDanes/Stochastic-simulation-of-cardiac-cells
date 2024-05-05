@@ -40,31 +40,29 @@ def draw_chess_board(ax):
 
 def update_colors(frame, patches, indexos, data):
     # This function is called for each frame of the animation
+    #print(frame)
     np.random.shuffle(patches)  # Shuffle the patches
     for (patch, (i,j)) in zip(patches,indexos):
-        potential = abs(data[f'Volt_{i}'][frame-1]) # potential = abs(data[f'Volt_{i}_{j}'][frame-1])
-        color = (potential/200, 0, 0)
+        potential = abs(data[f'Volt_{i}'][frame-1] -25) # potential = abs(data[f'Volt_{i}_{j}'][frame-1])
+        color = (1-potential/200, 0, 0)
         patch.set_color(color)
     return patches
 
 def plot_animation(data):
     # Create the main window
     root = tk.Tk()
-    root.title("Animated Chess Board")
+    root.title("Potential wave in cardiac tissue")
 
     fig = Figure(figsize=(6, 6))
     ax = fig.add_subplot(111)
 
-    # Draw chess board and add to tkinter
     patches, indexos = draw_chess_board(ax)
     canvas = FigureCanvasTkAgg(fig, master=root)  # A tk.DrawingArea.
     canvas.draw()
     canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
-    # Create animation
-    anim = FuncAnimation(fig, update_colors, fargs=(patches,indexos,data), frames=1000, interval=100)
+    anim = FuncAnimation(fig, update_colors, fargs=(patches,indexos,data), frames=1000, interval=200)
 
-    # Start the GUI event loop
     root.mainloop()
 
 def main():
