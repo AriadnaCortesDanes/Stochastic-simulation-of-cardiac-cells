@@ -63,7 +63,7 @@ void Variables::writebackup(double *t,char *despath)
   oo << FCa << ",";      
   oo << G << ",";      
   oo << Itot;            
-  oo << std::endl;
+  //oo << std::endl;
   oo.close();
   
 }

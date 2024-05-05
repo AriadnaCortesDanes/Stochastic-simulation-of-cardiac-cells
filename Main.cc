@@ -29,7 +29,7 @@
  */
 
 #include "Header.h"
-
+#include <vector>
 
 /*-----------------------------------------------------------------------------
   FLAG TO CHOOSE BETWEEN DYNAMIC AND S1S2 RESTITUTION PROTOCOL
@@ -119,6 +119,8 @@ double KpCa=0.0005;
 //Parameters for IpK;
 double GpK=0.0146;
 
+// Number of cells
+int n_cells = 10;
 
 /*------------------------------------------------------------------------------
                 PARAMETER FOR INTEGRATION
@@ -267,9 +269,13 @@ int main(int argc, char *argv[])
 
   Start(argc,argv);
   
-  Variables Var(V_init,Cai_init,CaSR_init,Nai_init,Ki_init);
+  std::vector<Variables> cells;
 
-  write_headers();
+  for (int i = 0; i <n_cells; i++) {
+	cells.push_back(*(new Variables(V_init,Cai_init,CaSR_init,Nai_init,Ki_init)));
+  }
+
+  //write_headers();
  
   for(step=0;time<=STOPTIME;step++)
     { 
@@ -416,13 +422,23 @@ int main(int argc, char *argv[])
 	}
 #endif
 
+	for (auto cell: cells) {
+		Step(&cell,HT,despath,&time,step,Istim);
+	}	  
 
-      Step(&Var,HT,despath,&time,step,Istim);
-	  
-     
-      if(step % 250 ==0)
-		// std::cout<<Istim<<std::endl;
-	Var.writebackup(&time,despath);
+    if(step % 250 ==0) {
+		//std::cout<<time<<std::endl;
+		for (auto cell: cells) {
+			cell.writebackup(&time,despath);
+	
+			static char filename[300];
+			sprintf(filename,"%s%s",despath,"/PointBackupData_mod_2.csv"); 
+			std::ofstream oo(filename,std::ios::app);
+			oo << std::endl;
+			oo.close();
+		}	
+	} 
+	
 	time+=HT;
     }
   return 0;
