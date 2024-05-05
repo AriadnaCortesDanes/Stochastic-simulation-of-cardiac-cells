@@ -384,26 +384,19 @@ void Step(Variables *V, double HT, char *despath, double *tt, int step, double I
 
   // Update gates
 
-  // sm += HT * (AM*(1-sm)-BM*sm);
+  sm += HT * (AM*(1-sm)-BM*sm);
   sh += HT * (AH*(1-sh)-BH*sh);
   sj += HT * (AJ*(1-sj)-BJ*sj);
-  // sm = M_INF - (M_INF - sm) * exp(-HT / TAU_M);
-  // sh = H_INF - (H_INF - sh) * exp(-HT / TAU_H);
-  // sj = J_INF - (J_INF - sj) * exp(-HT / TAU_J);
+  //sm = M_INF - (M_INF - sm) * exp(-HT / TAU_M);
+  //sh = H_INF - (H_INF - sh) * exp(-HT / TAU_H);
+  //sj = J_INF - (J_INF - sj) * exp(-HT / TAU_J);
 
 
-  // sxr1 = Xr1_INF - (Xr1_INF - sxr1) * exp(-HT / TAU_Xr1);
-  // sxr2 = Xr2_INF - (Xr2_INF - sxr2) * exp(-HT / TAU_Xr2);
+  sxr1 = Xr1_INF - (Xr1_INF - sxr1) * exp(-HT / TAU_Xr1);
+  sxr2 = Xr2_INF - (Xr2_INF - sxr2) * exp(-HT / TAU_Xr2);
 
-  sxr1 += get_increment(sxr1,Xr1_INF,TAU_Xr1,HT);
-  sxr2 += get_increment(sxr2,Xr2_INF,TAU_Xr2,HT);
-
-
-  // sxs = Xs_INF - (Xs_INF - sxs) * exp(-HT / TAU_Xs);
-  // ss = S_INF - (S_INF - ss) * exp(-HT / TAU_S);
-  // sr = R_INF - (R_INF - sr) * exp(-HT / TAU_R);
-  // sd = D_INF - (D_INF - sd) * exp(-HT / TAU_D);
-  // sf = F_INF - (F_INF - sf) * exp(-HT / TAU_F);
+  ///sxr1 += get_increment(sxr1,Xr1_INF,TAU_Xr1,HT);
+  ///sxr2 += get_increment(sxr2,Xr2_INF,TAU_Xr2,HT);
 
   sxs += get_increment(sxs,Xs_INF,TAU_Xs,HT);
   ss += get_increment(ss,S_INF,TAU_S,HT);
@@ -415,8 +408,8 @@ void Step(Variables *V, double HT, char *despath, double *tt, int step, double I
   //////////////////// BINOMIALS ///////////////////////////
 
   // sm += get_binomial_increment(sm,AM,BM,HT);
-  Nm += get_binomial_increment(Nm,NTm,AM,BM,HT);
-  sm = Nm/NTm;
+  //Nm += get_binomial_increment(Nm,NTm,AM,BM,HT);
+  //sm = Nm/NTm;
 
   // sm += HT * (AM*(1-sm)-BM*sm);
   // sh += HT * (AH*(1-sh)-BH*sh);

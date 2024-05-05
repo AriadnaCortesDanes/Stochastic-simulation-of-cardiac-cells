@@ -123,6 +123,7 @@ double GpK=0.0146;
 
 // Mesh of cells
 int n_cells = 10;
+double dx = 0.01; // distance between cells, cm
 
 /*------------------------------------------------------------------------------
                 PARAMETER FOR INTEGRATION
@@ -438,7 +439,7 @@ int main(int argc, char *argv[])
 		double temp = cells[i].Volt;
 		Step(&cells[i],HT,despath,&time,step, i == 0? Istim : 0.0);
 
-		cells[i].Volt += (HT/(rho*S*CAPACITANCE))*(v_right-last_potential);
+		cells[i].Volt += (HT/(rho*S*CAPACITANCE))*(v_right-last_potential)/dx;
 
 		last_potential = temp;
 	}	  
