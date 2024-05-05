@@ -438,7 +438,7 @@ int main(int argc, char *argv[])
 		double temp = cells[i].Volt;
 		Step(&cells[i],HT,despath,&time,step, i == 0? Istim : 0.0);
 
-		cells[i].Volt += (1.0/(rho*S*CAPACITANCE))*(v_right-last_potential);
+		cells[i].Volt += (HT/(rho*S*CAPACITANCE))*(v_right-last_potential);
 
 		last_potential = temp;
 	}	  
