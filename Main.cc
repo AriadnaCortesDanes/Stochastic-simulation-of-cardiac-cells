@@ -436,14 +436,11 @@ int main(int argc, char *argv[])
 #endif
 
 	std::vector<double> v_up(n_cells_cols);
+	
+	for (int k = 0; k < n_cells_cols; ++k) v_up[k] = cells[0][k].Volt;
 
 	for (int i = 0; i <n_cells_rows; i++) {
 		double V_left = cells[i][0].Volt;
-
-		if (i == 0) {
-			for (int k = 0; k < n_cells_cols; ++k) v_up[k] = cells[0][k].Volt;
-		} 
-
 		for (int j = 0; j < n_cells_cols; j++) {
 			double v_right, v_down;
 
