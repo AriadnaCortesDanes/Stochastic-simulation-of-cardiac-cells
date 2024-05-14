@@ -52,11 +52,17 @@ extern double Vsr;
 
 extern double period;
 
+extern double NTna;
+extern double NTkr;
+extern double NTCaL;
+extern double NTto;
+extern double NTks;
+extern double NTCa;
 // For binomial generation
 std::random_device rd;
 std::mt19937 gen(rd());
 
-double NTm = 100;
+
 
 
 double get_increment(double concentration, double Pinf,double tau,double deltat){
@@ -71,7 +77,14 @@ double get_binomial_increment(double Ng,double NTg, double alpha,double beta,dou
   return bin_alpha(gen)-bin_beta(gen);
 
 }
+double get_binomial_increment2(double Ng,double NTg, double Pinf,double tau,double deltat){
 
+  std::binomial_distribution<int> bin_alpha(NTg-Ng, (Pinf/tau)*deltat);
+  std::binomial_distribution<int> bin_beta(Ng, ((1-Pinf)/tau)*deltat);
+
+  return bin_alpha(gen)-bin_beta(gen);
+
+}
 void Step(Variables *V, double HT, char *despath, double *tt, int step, double Istim)
 {
 
@@ -184,16 +197,27 @@ void Step(Variables *V, double HT, char *despath, double *tt, int step, double I
 #define sm (*V).M
 #define Nm (*V).Nm
 #define sh (*V).H
+#define Nh (*V).Nh
 #define sj (*V).J
+#define Nj (*V).Nj
 #define sxr1 (*V).Xr1
+#define Nsxr1 (*V).Nsxr1
 #define sxr2 (*V).Xr2
+#define Nsxr2 (*V).Nsxr2
 #define sxs (*V).Xs
+#define Nxs (*V).Nxs
 #define ss (*V).S
+#define Ns (*V).Ns
 #define sr (*V).R
+#define Nr (*V).Nr
 #define sd (*V).D
+#define Nd (*V).Nd
 #define sf (*V).F
+#define Nf (*V).Nf
 #define sfca (*V).FCa
+#define Nfca (*V).Nfca
 #define sg (*V).G
+#define Ng (*V).Ng
 #define svolt (*V).Volt
 #define svolt2 (*V).Volt2
 #define Cai (*V).Cai
@@ -384,50 +408,65 @@ void Step(Variables *V, double HT, char *despath, double *tt, int step, double I
 
   // Update gates
 
-  sm += HT * (AM*(1-sm)-BM*sm);
-  sh += HT * (AH*(1-sh)-BH*sh);
-  sj += HT * (AJ*(1-sj)-BJ*sj);
-  //sm = M_INF - (M_INF - sm) * exp(-HT / TAU_M);
-  //sh = H_INF - (H_INF - sh) * exp(-HT / TAU_H);
-  //sj = J_INF - (J_INF - sj) * exp(-HT / TAU_J);
+  //sm += HT * (AM*(1-sm)-BM*sm);
+  //sh += HT * (AH*(1-sh)-BH*sh);
+  //sj += HT * (AJ*(1-sj)-BJ*sj);
 
+  //sxr1 += get_increment(sxr1,Xr1_INF,TAU_Xr1,HT);
+  //sxr2 += get_increment(sxr2,Xr2_INF,TAU_Xr2,HT);
 
-  sxr1 = Xr1_INF - (Xr1_INF - sxr1) * exp(-HT / TAU_Xr1);
-  sxr2 = Xr2_INF - (Xr2_INF - sxr2) * exp(-HT / TAU_Xr2);
-
-  ///sxr1 += get_increment(sxr1,Xr1_INF,TAU_Xr1,HT);
-  ///sxr2 += get_increment(sxr2,Xr2_INF,TAU_Xr2,HT);
-
-  sxs += get_increment(sxs,Xs_INF,TAU_Xs,HT);
-  ss += get_increment(ss,S_INF,TAU_S,HT);
-  sr += get_increment(sr,R_INF,TAU_R,HT);
-  sd += get_increment(sd,D_INF,TAU_D,HT);
-  sf += get_increment(sf,F_INF,TAU_F,HT);
-
-
-  //////////////////// BINOMIALS ///////////////////////////
-
-  // sm += get_binomial_increment(sm,AM,BM,HT);
-  //Nm += get_binomial_increment(Nm,NTm,AM,BM,HT);
-  //sm = Nm/NTm;
-
-  // sm += HT * (AM*(1-sm)-BM*sm);
-  // sh += HT * (AH*(1-sh)-BH*sh);
-  // sj += HT * (AJ*(1-sj)-BJ*sj);
-  //////////////////////////////////////////////////////////
-
-
-
-
+  //sd += get_increment(sd,D_INF,TAU_D,HT);
+  //sf += get_increment(sf,F_INF,TAU_F,HT);
   fcaold = sfca;
-  sfca = FCa_INF - (FCa_INF - sfca) * exptaufca;
+  //sfca += get_increment(sfca,FCa_INF,taufca,HT);
+  // sfca = FCa_INF - (FCa_INF - sfca) * exptaufca;
   if (sfca > fcaold && (svolt) > -37)
     sfca = fcaold;
+
+  //sxs += get_increment(sxs,Xs_INF,TAU_Xs,HT);
+
+  //ss += get_increment(ss,S_INF,TAU_S,HT);
+  //sr += get_increment(sr,R_INF,TAU_R,HT);
+  
   gold = sg;
-  sg = G_INF - (G_INF - sg) * exptaug;
+  //sg += get_increment(sg,G_INF,taug,HT);
+  //sg = G_INF - (G_INF - sg) * exptaug;
   if (sg > gold && (svolt) > -37)
     sg = gold;
 
+//////////////////// BINOMIALS ///////////////////////////
+
+  Nm += get_binomial_increment(Nm,NTna,AM,BM,HT);
+  sm = Nm/NTna;
+  Nh += get_binomial_increment(Nh,NTna,AH,BH,HT);
+  sh = Nh/NTna;
+  Nj += get_binomial_increment(Nj,NTna,AJ,BJ,HT);
+  sj = Nj/NTna;
+
+  Nsxr1 += get_binomial_increment2(Nsxr1,NTkr,Xr1_INF,TAU_Xr1,HT);
+  sxr1 = Nsxr1/NTkr;
+  Nsxr2 += get_binomial_increment2(Nsxr2,NTkr,Xr2_INF,TAU_Xr2,HT);
+  sxr2 = Nsxr2/NTkr;
+
+  Nd += get_binomial_increment2(Nd,NTCaL,D_INF,TAU_D,HT);
+  sd = Nd/NTCaL;
+  Nf += get_binomial_increment2(Nf,NTCaL,F_INF,TAU_F,HT);
+  sf = Nf/NTCaL;
+  Nfca += get_binomial_increment2(Nfca,NTCaL,FCa_INF,taufca,HT);
+  sfca = Nfca/NTCaL;
+  
+  Nr += get_binomial_increment2(Nr,NTto,R_INF,TAU_R,HT);
+  sr = Nr/NTto;
+  Ns += get_binomial_increment2(Ns,NTto,S_INF,TAU_S,HT);
+  ss = Ns/NTto;
+
+  Nxs += get_binomial_increment2(Nxs,NTks,Xs_INF,TAU_Xs,HT);
+  sxs = Nxs/NTks;
+
+  Ng += get_binomial_increment2(Ng,NTCa,G_INF,taug,HT);
+  sg = Ng/NTCa;
+  //////////////////////////////////////////////////////////
+ 
   // update voltage
   svolt = svolt + HT * (-sItot);
 }

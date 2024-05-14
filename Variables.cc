@@ -2,7 +2,12 @@
    Variables.h*/
 
 #include "Header.h"
-
+extern double NTna;
+extern double NTkr;
+extern double NTCaL;
+extern double NTto;
+extern double NTks;
+extern double NTCa;
 Variables::Variables(double V_init,double Cai_init,double CaSR_init,double Nai_init,double Ki_init)
 {
   Volt=V_init;
@@ -14,16 +19,27 @@ Variables::Variables(double V_init,double Cai_init,double CaSR_init,double Nai_i
   M= 0.;
   Nm=0;
   H= 0.75;
+  Nh=0.75*NTna;
   J= 0.75; 
+  Nj=0.75*NTna;
   Xr1= 0.;
+  Nsxr1=0;
   Xr2= 1.;
+  Nsxr2=0.5*NTkr;
   Xs= 0.;
+  Nxs=0;
   R= 0.;
+  Nr=0;
   S= 1.;
+  Ns=NTto;
   D= 0.;
+  Nd=0;
   F= 1.;
-  FCa= 1.;                                        
-  G= 1.;  
+  Nf=NTCaL;
+  FCa= 1.;
+  Nfca=NTCaL;                                        
+  G=1.;
+  Ng=NTCa;  
 
   printf("Variables initialized\n");
 }

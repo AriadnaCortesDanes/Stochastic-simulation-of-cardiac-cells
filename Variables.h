@@ -19,6 +19,17 @@ public:
   //INa
   double   M;
   int      Nm;
+  int      Nh;
+  int      Nj;
+  int      Nsxr1;
+  int      Nsxr2;
+  int      Nd;
+  int      Nf;
+  int      Nfca;
+  int      Ns;
+  int      Nr;
+  int      Nxs;
+  int      Ng;
   double   H;
   double   J;
   //IKr
