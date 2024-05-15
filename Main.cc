@@ -122,7 +122,8 @@ double KpCa=0.0005;
 double GpK=0.0146;
 
 // Mesh of cells
-int n_cells = 100;
+int n_cells_rows = 20;
+int n_cells_cols = 20;
 double dx = 0.1; // distance between cells, cm
 
 /*------------------------------------------------------------------------------
@@ -213,20 +214,22 @@ void write_headers(){
 	sprintf(s, "%s%s", despath, "/Currents_mod2.csv");
     FF = fopen(s, "w");
 
-	for (int i = 0; i < n_cells; i++) {
-		fprintf(FF, "%s%i,", "time_", (char) i);
-		fprintf(FF, "%s%i,", "IKr_", (char) i);
-		fprintf(FF, "%s%i,", "IKs_", (char) i);
-		fprintf(FF, "%s%i,", "IK1_", (char) i);
-		fprintf(FF, "%s%i,", "Ito_", (char) i);
-		fprintf(FF, "%s%i,", "INa_", (char) i);
-		fprintf(FF, "%s%i,", "IbNa_", (char) i);
-		fprintf(FF, "%s%i,", "INaK_", (char) i);
-		fprintf(FF, "%s%i,", "ICaL_", (char) i);
-		fprintf(FF, "%s%i,", "IbCa_", (char) i);
-		fprintf(FF, "%s%i,", "INaCa_", (char) i);
-		fprintf(FF, "%s%i,", "Irel_", (char) i);
-		fprintf(FF, "%s%i", "Istim_", (char) i);
+	for (int i = 0; i < n_cells_rows; i++) {
+		for (int j = 0; j < n_cells_cols; j++) {
+			fprintf(FF, "%s%i_%i,", "time_", (char) i, (char) j);
+			fprintf(FF, "%s%i_%i,", "IKr_", (char) i, (char) j);
+			fprintf(FF, "%s%i_%i,", "IKs_", (char) i,  (char) j);
+			fprintf(FF, "%s%i_%i,", "IK1_", (char) i,  (char) j);
+			fprintf(FF, "%s%i_%i,", "Ito_", (char) i,  (char) j);
+			fprintf(FF, "%s%i_%i,", "INa_", (char) i,  (char) j);
+			fprintf(FF, "%s%i_%i,", "IbNa_", (char) i,  (char) j);
+			fprintf(FF, "%s%i_%i,", "INaK_", (char) i,  (char) j);
+			fprintf(FF, "%s%i_%i,", "ICaL_", (char) i,  (char) j);
+			fprintf(FF, "%s%i_%i,", "IbCa_", (char) i,  (char) j);
+			fprintf(FF, "%s%i_%i,", "INaCa_", (char) i,  (char) j);
+			fprintf(FF, "%s%i_%i,", "Irel_", (char) i,  (char) j);
+			fprintf(FF, "%s%i_%i", "Istim_", (char) i,  (char) j);
+		}
 	}
     fprintf(FF, "\n");
     fclose(FF);
@@ -242,27 +245,29 @@ void write_headers(){
       exit(1);
     }
     
-	for (int i = 0; i < n_cells; i++) {
-		oo << "time_" << i << ",";              
-		oo << "Volt_"<< i << ",";   
-		oo << "Volt2_" << i << ",";   
-		oo << "Cai_" << i << ",";     
-		oo << "CaSR_" << i << ",";
-		oo << "Nai_" << i << ",";
-		oo << "Ki_" << i << ",";
-		oo << "M_" << i << ",";       
-		oo << "H_" << i << ",";       
-		oo << "J_" << i << ",";       
-		oo << "Xr1_" << i << ",";     
-		oo << "Xr2_" << i << ",";     
-		oo << "Xs_" << i << ",";     
-		oo << "S_" << i << ",";       
-		oo << "R_" << i << ",";       
-		oo << "D_" << i << ",";      
-		oo << "F_" << i << ",";       
-		oo << "FCa_" << i << ",";      
-		oo << "G_" << i << ",";      
-		i == n_cells-1 ? oo << "Itot_"<< i: oo << "Itot_"<<i<<",";            
+	for (int i = 0; i < n_cells_rows; i++) {
+		for (int j = 0; j < n_cells_cols; j++) {
+			oo << "time_" << i << "_"<< j << ",";              
+			oo << "Volt_"<< i << "_"<< j << ",";   
+			oo << "Volt2_" << i << "_"<< j << ",";   
+			oo << "Cai_" << i << "_"<< j << ",";     
+			oo << "CaSR_" << i << "_"<< j << ",";
+			oo << "Nai_" << i << "_"<< j << ",";
+			oo << "Ki_" << i << "_"<< j << ",";
+			oo << "M_" << i << "_"<< j << ",";       
+			oo << "H_" << i << "_"<< j << ",";       
+			oo << "J_" << i << "_"<< j << ",";       
+			oo << "Xr1_" << i << "_"<< j << ",";     
+			oo << "Xr2_" << i << "_"<< j << ",";     
+			oo << "Xs_" << i << "_"<< j << ",";     
+			oo << "S_" << i << "_"<< j << ",";       
+			oo << "R_" << i << "_"<< j << ",";       
+			oo << "D_" << i << "_"<< j << ",";      
+			oo << "F_" << i << "_"<< j << ",";       
+			oo << "FCa_" << i << "_"<< j << ",";      
+			oo << "G_" << i << "_"<< j << ",";      
+			i == n_cells_rows-1 && j == n_cells_cols-1? oo << "Itot_"<< i << "_" << j : oo << "Itot_"<<i <<"_"<< j<<",";            
+		}
 	}
 	oo << std::endl;
 	oo.close();
@@ -276,11 +281,11 @@ int main(int argc, char *argv[])
 
   Start(argc,argv);
   
-  std::vector<Variables> cells;
-  std::vector<double> potentials(n_cells,0); 
+  std::vector<std::vector<Variables>> cells(n_cells_rows);
 
-  for (int i = 0; i <n_cells; i++) {
-	cells.push_back(*(new Variables(V_init,Cai_init,CaSR_init,Nai_init,Ki_init)));
+  for (int i = 0; i <n_cells_rows; i++) {
+	for (int j = 0; j < n_cells_cols; j++) 
+		cells[i].push_back(*(new Variables(V_init,Cai_init,CaSR_init,Nai_init,Ki_init)));
   }
 
   write_headers();
@@ -430,27 +435,33 @@ int main(int argc, char *argv[])
 	}
 #endif
 
-	double V_left = -86.0;
-	for (int i = 0; i <n_cells; i++) {
-		
-		double v_right;
+	std::vector<double> v_up(n_cells_cols);
+	
+	for (int k = 0; k < n_cells_cols; ++k) v_up[k] = cells[0][k].Volt;
 
-		// if (i > 0) v_left = cells[i-1].Volt;
-		// else v_left = -86.2;
-		if (i < n_cells -1 ) v_right = cells[i+1].Volt;
-		else v_right = -86.0;
+	for (int i = 0; i <n_cells_rows; i++) {
+		double V_left = cells[i][0].Volt;
+		for (int j = 0; j < n_cells_cols; j++) {
+			double v_right, v_down;
 
-		double V_i = cells[i].Volt;
-		Step(&cells[i],HT,despath,&time,step, i == 0? Istim : 0.0);
+			if (i < n_cells_rows -1 ) v_down = cells[i+1][j].Volt;
+			else v_down = cells[n_cells_rows -1][j].Volt;
 
-		cells[i].Volt += HT* 0.00154*((v_right+V_left-2*V_i)/(dx*dx));
+			if (j < n_cells_cols -1 ) v_right = cells[i][j+1].Volt;
+			else v_right = cells[i][n_cells_cols-1].Volt;
 
-		// std::cout<< HT* (1/(rho*S*CAPACITANCE))*((v_right-last_potential)/(dx*dx))<<std::endl;
+			double V_i_j = cells[i][j].Volt;
+			Step(&cells[i][j],HT,despath,&time,step, i == 0 && j == 0? Istim : 0.0);
 
-		V_left = V_i;
+			cells[i][j].Volt += HT* 0.00154*((v_right+V_left + v_down + v_up[j]-4*V_i_j)/(dx*dx));
 
-		// std::cout<<"Cell: "<<i<<std::endl<<HT* (1/(1000*rho*S*CAPACITANCE))*((v_right-last_potential)/(dx*dx))<<std::endl;
-		
+			// std::cout<< HT* (1/(rho*S*CAPACITANCE))*((v_right-last_potential)/(dx*dx))<<std::endl;
+
+			V_left = V_i_j;
+			v_up[j] = V_i_j;
+
+			// std::cout<<"Cell: "<<i<<std::endl<<HT* (1/(1000*rho*S*CAPACITANCE))*((v_right-last_potential)/(dx*dx))<<std::endl;
+			}
 
 	}	  
 
@@ -458,8 +469,8 @@ int main(int argc, char *argv[])
 
     if(step % 250 ==0) {
 		//std::cout<<time<<std::endl;
-		for (auto cell: cells) {
-			cell.writebackup(&time,despath);
+		for (auto row: cells) {
+			for (auto cell : row) cell.writebackup(&time,despath);
 		}	
 		static char filename[300];
 		sprintf(filename,"%s%s",despath,"/PointBackupData_mod_2.csv"); 
