@@ -8,13 +8,13 @@ import numpy as np
 def draw_data(data, frame, fig, ax):
     ax.clear()  # Clear the previous drawing
 
-    for i in range(20):  # Rows
-        for j in range(20):  # Columns
+    for i in range(10):  # Rows
+        for j in range(10):  # Columns
             color_from_data = 1- abs(data[f'Volt_{i}_{j}'][frame]) / 100
             ax.add_patch(plt.Rectangle((i, j), 1, 1, fill=True, color=(color_from_data, 0, 0)))
 
-    ax.set_xlim(0, 20)
-    ax.set_ylim(0, 20)
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 10)
     ax.set_xticks([])
     ax.set_yticks([])
 

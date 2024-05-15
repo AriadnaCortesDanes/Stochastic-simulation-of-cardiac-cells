@@ -275,6 +275,7 @@ void Step(Variables *V, double HT, char *despath, double *tt, int step, double I
   Ki += HT * dKi;
 
   // write currents to file
+  /**
   if (step % 250 == 0)
   {
     sprintf(s, "%s%s", despath, "/Currents_mod2.csv");
@@ -294,7 +295,7 @@ void Step(Variables *V, double HT, char *despath, double *tt, int step, double I
     fprintf(FF, "%4.10f", Istim);
     fprintf(FF, "\n");
     fclose(FF);
-  }
+  }**/
 
   // compute steady state values and time constants
   AM = 1. / (1. + exp((-60. - svolt) / 5.));

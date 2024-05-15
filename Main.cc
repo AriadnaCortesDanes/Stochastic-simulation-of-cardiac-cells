@@ -122,8 +122,8 @@ double KpCa=0.0005;
 double GpK=0.0146;
 
 // Mesh of cells
-int n_cells_rows = 20;
-int n_cells_cols = 20;
+int n_cells_rows = 10;
+int n_cells_cols = 10;
 double dx = 0.1; // distance between cells, cm
 
 /*------------------------------------------------------------------------------
@@ -245,11 +245,12 @@ void write_headers(){
       exit(1);
     }
     
+	oo << "time,";              
+
 	for (int i = 0; i < n_cells_rows; i++) {
 		for (int j = 0; j < n_cells_cols; j++) {
-			oo << "time_" << i << "_"<< j << ",";              
-			oo << "Volt_"<< i << "_"<< j << ",";   
-			oo << "Volt2_" << i << "_"<< j << ",";   
+			//oo << "Volt_"<< i << "_"<< j << ",";   
+			/**oo << "Volt2_" << i << "_"<< j << ",";   
 			oo << "Cai_" << i << "_"<< j << ",";     
 			oo << "CaSR_" << i << "_"<< j << ",";
 			oo << "Nai_" << i << "_"<< j << ",";
@@ -265,8 +266,8 @@ void write_headers(){
 			oo << "D_" << i << "_"<< j << ",";      
 			oo << "F_" << i << "_"<< j << ",";       
 			oo << "FCa_" << i << "_"<< j << ",";      
-			oo << "G_" << i << "_"<< j << ",";      
-			i == n_cells_rows-1 && j == n_cells_cols-1? oo << "Itot_"<< i << "_" << j : oo << "Itot_"<<i <<"_"<< j<<",";            
+			oo << "G_" << i << "_"<< j << ",";     **/ 
+			i == n_cells_rows-1 && j == n_cells_cols-1? oo << "Volt_"<< i << "_" << j : oo << "Volt_"<<i <<"_"<< j<<",";            
 		}
 	}
 	oo << std::endl;
@@ -469,12 +470,16 @@ int main(int argc, char *argv[])
 
     if(step % 250 ==0) {
 		//std::cout<<time<<std::endl;
-		for (auto row: cells) {
-			for (auto cell : row) cell.writebackup(&time,despath);
-		}	
 		static char filename[300];
 		sprintf(filename,"%s%s",despath,"/PointBackupData_mod_2.csv"); 
 		std::ofstream oo(filename,std::ios::app);
+		oo << time << ",";
+		for (auto row: cells) {
+			for (auto cell : row) {
+				//cell.writebackup(&time,despath);
+				oo << cell.Volt << ",";
+			}
+		}	
 		oo << std::endl;
 		oo.close();
 	} 
