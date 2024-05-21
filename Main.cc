@@ -122,9 +122,12 @@ double KpCa=0.0005;
 double GpK=0.0146;
 
 // Mesh of cells
-int n_cells_rows = 10;
-int n_cells_cols = 10;
+int n_cells_rows = 20;
+int n_cells_cols = 20;
 double dx = 0.1; // distance between cells, cm
+
+// Saving parameters
+// std::string file_name = "/Voltages_test_Q1.csv";
 
 /*------------------------------------------------------------------------------
                 PARAMETER FOR INTEGRATION
@@ -146,22 +149,30 @@ double Ki_init=138.3;
              PARAMETER FOR SIMULATION DURATION
   ---------------------------------------------------------------------------*/
 //duration of the simulation 
-double STOPTIME=1000;
+double STOPTIME=400;
 
 /*-----------------------------------------------------------------------------
   PARAMETERS FOR STIMULATION PROTOCOLS 
 -----------------------------------------------------------------------------*/
 
-#ifdef DYNRESTPROTOCOL
-int i_low=0,i_high=1;
-int j_low=0,j_high=1;
-double stimduration=1.0;
-double stimstrength=-52;
-double period=1000;
-double sum=period*1000.;
-double tbegin=0;
-double tend=tbegin+stimduration;
-#endif
+
+double tstart_stim_1 = 0;
+double tend_stim_1 = 1;
+double stimstrength_1 = -52;
+double tstart_stim_2 = 290;
+double tend_stim_2 = 291;
+double stimstrength_2 = -52;
+
+// #ifdef DYNRESTPROTOCOL
+// int i_low=0,i_high=1;
+// int j_low=0,j_high=1;
+// double stimduration=1.0;
+// double stimstrength=-52;
+// double period=1000;
+// double sum=period*1000.;
+// double tbegin=0;
+// double tend=tbegin+stimduration;
+// #endif
 
 
 #ifdef S1S2RESTPROTOCOL
@@ -211,7 +222,7 @@ void write_headers(){
 	// Write header of currents.csv
 	static char s[200];
 	FILE *FF;
-	sprintf(s, "%s%s", despath, "/Currents_mod2.csv");
+	sprintf(s, "%s%s", despath, "/Currents.csv");
     FF = fopen(s, "w");
 
 	for (int i = 0; i < n_cells_rows; i++) {
@@ -236,7 +247,7 @@ void write_headers(){
 
 	 static char filename[300];
 
-  sprintf(filename,"%s%s",despath,"/PointBackupData_mod_2.csv"); 
+  sprintf(filename,"%s%s",despath,"/Voltages.csv"); 
   
   std::ofstream oo(filename);
   if(!oo)
@@ -274,11 +285,39 @@ void write_headers(){
 	oo.close();
 }
 
+
+void print_progress(float progress){
+
+    int barWidth = 70;
+
+    std::cout << "[";
+    int pos = barWidth * progress;
+    for (int i = 0; i < barWidth; ++i) {
+        if (i < pos) std::cout << "=";
+        else if (i == pos) std::cout << ">";
+        else std::cout << " ";
+    }
+    std::cout << "] " << int(progress * 100.0) << " %\r";
+    std::cout.flush();
+
+    // progress += 0.16; // for demonstration only
+	std::cout << std::endl;
+}
+
 int main(int argc, char *argv[])
 {
   static double time=0;
   int step;
   double Istim;
+  // Initialize stimulation matrices
+  double Istim1_M[n_cells_rows][n_cells_cols];
+  double Istim2_M[n_cells_rows][n_cells_cols];
+  for (int i = 0; i <n_cells_rows; i++) {
+	for (int j = 0; j < n_cells_cols; j++) {
+		i==0 ? Istim1_M[i][j] = stimstrength_1 : Istim1_M[i][j] = 0;
+		(i<n_cells_rows/2&&j<n_cells_cols/2) ? Istim2_M[i][j] = stimstrength_2 : Istim2_M[i][j] = 0;
+	}
+  }
 
   Start(argc,argv);
   
@@ -293,148 +332,6 @@ int main(int argc, char *argv[])
  
   for(step=0;time<=STOPTIME;step++)
     { 
-      
-
-#ifdef DYNRESTPROTOCOL
-      if(time>sum)
-	{
-	  if(period>4000)
-	    {
-	      period=period-1000;
-	      sum=sum+period*30;
-	    }
-	  else if(period>3000)
-	    {
-	      period=period-1000;
-	      sum=sum+period*30;
-	    }
-	  else if(period>2000)
-	    {
-	      period=period-1000;
-	      sum=sum+period*30;
-	    }
-	  else if(period>1000)
-	    {
-	      period=period-1000;
-	      sum=sum+period*100;
-	    }
-	  else if(period>500)
-	    {
-	     
-	      period=period-250;
-	      sum=sum+period*100;
-	    }
-	  else if(period>400)
-	    {
-	      period=period-50;
-	      sum=sum+period*100;
-	    }
-	  else if(period>300)
-	    {
-	      period=period-10;
-	      sum=sum+period*100;
-	    }
-	  else if(period>250)
-	    {
-	      period=period-5;
-	      sum=sum+period*100;
-	    }
-	  else if(period>50)
-	    {
-	      period=period-1;
-	      sum=sum+period*100;
-	    }
-	  else
-	    {
-	      printf("restitution protocol finished\n");
-	      exit(1);
-	    }
-	}
-	 
-      if(time>=tbegin && time<=tend)
-	{
-	  Istim=stimstrength;
-	}
-      if(time>tend)
-	{
-	  Istim=0.;
-	  tbegin=tbegin+period;
-	  tend=tbegin+stimduration;
-	}
-#endif
-
-
-#ifdef S1S2RESTPROTOCOL
-      if(counter<repeats)
-	{
-
-	  if(time>=tbegin && time<=tend)
-	    {
-	      Istim=stimstrength;
-	    }
-	  if(time>tend)
-	    {
-	      Istim=0.;
-	      tbegin=tbegin+basicperiod;
-	      tend=tbegin+stimduration;
-	      counter++;
-	    }
-	 
-	}
-      else if(counter==repeats)
-	{
-
-	  if(time>=tbegin && time<=tend)
-	    {
-	      Istim=stimstrength;
-	    }
-	  if(time>tend)
-	    {
-	      Istim=0.;
-	      tbegin=tbegin+basicapd+dia;
-	      tbeginS2=tbegin;
-	      tend=tbegin+stimduration;
-	      counter++;
-	    }
-	}
-      else if(counter==repeats+1)
-	{
-	  if(time>=tbegin && time<=tend)
-	    {
-	      Istim=stimstrength;
-	    }
-	  if(time>tend)
-	    {
-	      Istim=0.;
-	      tbegin=tbegin+basicperiod;
-	      tend=tbegin+stimduration;
-	      counter=0;
-	      
-
-	      if(dia>1000)
-		{
-		  dia=dia-1000;
-		}
-	      else if(dia>300)
-		{
-		  dia=dia-100;
-		}
-	      else if(dia>150)
-		{
-		  dia=dia-5;
-		}
-	      else if(dia>5)
-		{
-		  dia=dia-1;
-		}
-	      else
-		{
-		  printf("restitution protocol finished\n");
-		  exit(1);
-		}
-	    } 
-	}
-#endif
 
 	std::vector<double> v_up(n_cells_cols);
 	
@@ -452,16 +349,25 @@ int main(int argc, char *argv[])
 			else v_right = cells[i][n_cells_cols-1].Volt;
 
 			double V_i_j = cells[i][j].Volt;
-			Step(&cells[i][j],HT,despath,&time,step, i == 0 && j == 0? Istim : 0.0);
-
+			
+		
+			// Perturbation1
+			if (tstart_stim_1<=time && time<tend_stim_1){
+				Step(&cells[i][j],HT,despath,&time,step, Istim1_M[i][j]);
+			}
+			// Perturbation 2
+			else if(tstart_stim_2<=time && time<tend_stim_2){
+				Step(&cells[i][j],HT,despath,&time,step, Istim2_M[i][j]);
+			}
+			else{
+				Step(&cells[i][j],HT,despath,&time,step, 0);
+			}
+			
 			cells[i][j].Volt += HT* 0.00154*((v_right+V_left + v_down + v_up[j]-4*V_i_j)/(dx*dx));
 
-			// std::cout<< HT* (1/(rho*S*CAPACITANCE))*((v_right-last_potential)/(dx*dx))<<std::endl;
 
 			V_left = V_i_j;
 			v_up[j] = V_i_j;
-
-			// std::cout<<"Cell: "<<i<<std::endl<<HT* (1/(1000*rho*S*CAPACITANCE))*((v_right-last_potential)/(dx*dx))<<std::endl;
 			}
 
 	}	  
@@ -471,7 +377,7 @@ int main(int argc, char *argv[])
     if(step % 250 ==0) {
 		//std::cout<<time<<std::endl;
 		static char filename[300];
-		sprintf(filename,"%s%s",despath,"/PointBackupData_mod_2.csv"); 
+		sprintf(filename,"%s%s",despath,"/Voltages.csv"); 
 		std::ofstream oo(filename,std::ios::app);
 		oo << time << ",";
 		for (auto row: cells) {
@@ -485,6 +391,10 @@ int main(int argc, char *argv[])
 	} 
 	
 	time+=HT;
+
+	if (step%1000==0){
+		print_progress(time/STOPTIME);
+	}
     }
   return 0;
 }
