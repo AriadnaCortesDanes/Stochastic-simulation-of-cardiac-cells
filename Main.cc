@@ -120,6 +120,15 @@ double GpCa=0.825;
 double KpCa=0.0005;
 //Parameters for IpK;
 double GpK=0.0146;
+//Number of gates
+double NTna = 100;
+double NTkr = 100;
+double NTCaL = 100;
+double NTto = 100;
+double NTks = 100;
+double NTCa = 100;
+
+
 
 // Mesh of cells
 int n_cells_rows = 100;
