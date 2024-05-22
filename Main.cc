@@ -122,8 +122,8 @@ double KpCa=0.0005;
 double GpK=0.0146;
 
 // Mesh of cells
-int n_cells_rows = 20;
-int n_cells_cols = 20;
+int n_cells_rows = 100;
+int n_cells_cols = 100;
 double dx = 0.1; // distance between cells, cm
 
 // Saving parameters
@@ -149,7 +149,7 @@ double Ki_init=138.3;
              PARAMETER FOR SIMULATION DURATION
   ---------------------------------------------------------------------------*/
 //duration of the simulation 
-double STOPTIME=400;
+double STOPTIME=1000;
 
 /*-----------------------------------------------------------------------------
   PARAMETERS FOR STIMULATION PROTOCOLS 
@@ -159,8 +159,8 @@ double STOPTIME=400;
 double tstart_stim_1 = 0;
 double tend_stim_1 = 1;
 double stimstrength_1 = -52;
-double tstart_stim_2 = 290;
-double tend_stim_2 = 291;
+double tstart_stim_2 = 310;
+double tend_stim_2 = 311;
 double stimstrength_2 = -52;
 
 // #ifdef DYNRESTPROTOCOL

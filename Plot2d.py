@@ -7,14 +7,14 @@ import matplotlib.animation as animation
 import pandas as pd
 
 
-df = pd.read_csv('csv/TestQ1_20x20.csv',index_col=False)
+df = pd.read_csv('csv/Voltages.csv',index_col=False)
 df = df.set_index('time')
 
 
 fps = 100
 nSeconds = 5
 
-matrix_shape = (20,20)
+matrix_shape = (100,100)
 
 
 
