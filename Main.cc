@@ -156,11 +156,12 @@ int i_low=0,i_high=1;
 int j_low=0,j_high=1;
 double stimduration=1.0;
 double stimstrength=-52;
+double stimstrength2=-52;
 double period=1000;
 double sum=period*1000.;
 double tbegin=0;
 double tend=tbegin+stimduration;
-double tbegin2=515.64;
+double tbegin2=515;
 double tend2=tbegin2+stimduration;
 #endif
 
@@ -210,28 +211,28 @@ void Start(int argc, char *argv[])
 void write_headers(){
 
 	// Write header of currents.csv
-	static char s[200];
-	FILE *FF;
-	sprintf(s, "%s%s", despath, "/Currents_mod2.csv");
-    FF = fopen(s, "w");
+	// static char s[200];
+	// FILE *FF;
+	// sprintf(s, "%s%s", despath, "/Currents_mod2.csv");
+    // FF = fopen(s, "w");
 
-	for (int i = 0; i < n_cells; i++) {
-		fprintf(FF, "%s%i,", "time_", (char) i);
-		fprintf(FF, "%s%i,", "IKr_", (char) i);
-		fprintf(FF, "%s%i,", "IKs_", (char) i);
-		fprintf(FF, "%s%i,", "IK1_", (char) i);
-		fprintf(FF, "%s%i,", "Ito_", (char) i);
-		fprintf(FF, "%s%i,", "INa_", (char) i);
-		fprintf(FF, "%s%i,", "IbNa_", (char) i);
-		fprintf(FF, "%s%i,", "INaK_", (char) i);
-		fprintf(FF, "%s%i,", "ICaL_", (char) i);
-		fprintf(FF, "%s%i,", "IbCa_", (char) i);
-		fprintf(FF, "%s%i,", "INaCa_", (char) i);
-		fprintf(FF, "%s%i,", "Irel_", (char) i);
-		fprintf(FF, "%s%i", "Istim_", (char) i);
-	}
-    fprintf(FF, "\n");
-    fclose(FF);
+	// for (int i = 0; i < n_cells; i++) {
+	// 	fprintf(FF, "%s%i,", "time_", (char) i);
+	// 	fprintf(FF, "%s%i,", "IKr_", (char) i);
+	// 	fprintf(FF, "%s%i,", "IKs_", (char) i);
+	// 	fprintf(FF, "%s%i,", "IK1_", (char) i);
+	// 	fprintf(FF, "%s%i,", "Ito_", (char) i);
+	// 	fprintf(FF, "%s%i,", "INa_", (char) i);
+	// 	fprintf(FF, "%s%i,", "IbNa_", (char) i);
+	// 	fprintf(FF, "%s%i,", "INaK_", (char) i);
+	// 	fprintf(FF, "%s%i,", "ICaL_", (char) i);
+	// 	fprintf(FF, "%s%i,", "IbCa_", (char) i);
+	// 	fprintf(FF, "%s%i,", "INaCa_", (char) i);
+	// 	fprintf(FF, "%s%i,", "Irel_", (char) i);
+	// 	fprintf(FF, "%s%i", "Istim_", (char) i);
+	// }
+    // fprintf(FF, "\n");
+    // fclose(FF);
 
 	 static char filename[300];
 
@@ -278,6 +279,13 @@ int main(int argc, char *argv[])
   double Istim2;
 
   Start(argc,argv);
+  int intensityNumber = 10;
+  int timeNumber = 10;
+  for(int ii = 0; ii < intensityNumber; ++ii){
+	for(int jj = 0; jj < timeNumber; ++jj){
+
+	}
+  }
   
   std::vector<Variables> cells;
   std::vector<double> potentials(n_cells,0); 
@@ -360,7 +368,7 @@ int main(int argc, char *argv[])
 	}
 	if(time>=tbegin2 && time<=tend2)
 	{
-	  Istim2=stimstrength;
+	  Istim2=stimstrength2;
 	}
       if(time>tend2)
 	{
