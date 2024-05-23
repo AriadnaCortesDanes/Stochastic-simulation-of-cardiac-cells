@@ -39,7 +39,7 @@ def plot_main_multianalysis(data):
     plt.show()
 
 def plot_animation(data):
-    n_cells = 100
+    n_cells = 300
     delta_x = 0.1
     fig, ax = plt.subplots()
 

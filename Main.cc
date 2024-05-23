@@ -122,7 +122,7 @@ double KpCa=0.0005;
 double GpK=0.0146;
 
 // Mesh of cells
-int n_cells = 100;
+int n_cells = 300;
 double dx = 0.1; // distance between cells, cm
 
 /*------------------------------------------------------------------------------
@@ -160,6 +160,8 @@ double period=1000;
 double sum=period*1000.;
 double tbegin=0;
 double tend=tbegin+stimduration;
+double tbegin2=515.64;
+double tend2=tbegin2+stimduration;
 #endif
 
 
@@ -273,6 +275,7 @@ int main(int argc, char *argv[])
   static double time=0;
   int step;
   double Istim;
+  double Istim2;
 
   Start(argc,argv);
   
@@ -355,6 +358,16 @@ int main(int argc, char *argv[])
 	  tbegin=tbegin+period;
 	  tend=tbegin+stimduration;
 	}
+	if(time>=tbegin2 && time<=tend2)
+	{
+	  Istim2=stimstrength;
+	}
+      if(time>tend2)
+	{
+	  Istim2=0.;
+	  tbegin2=tbegin2+period;
+	  tend2=tbegin2+stimduration;
+	}
 #endif
 
 
@@ -430,7 +443,7 @@ int main(int argc, char *argv[])
 	}
 #endif
 
-	double V_left = -86.0;
+	double V_left = cells[0].Volt;
 	for (int i = 0; i <n_cells; i++) {
 		
 		double v_right;
@@ -438,10 +451,15 @@ int main(int argc, char *argv[])
 		// if (i > 0) v_left = cells[i-1].Volt;
 		// else v_left = -86.2;
 		if (i < n_cells -1 ) v_right = cells[i+1].Volt;
-		else v_right = -86.0;
+		else v_right = cells[n_cells-1].Volt;
 
 		double V_i = cells[i].Volt;
-		Step(&cells[i],HT,despath,&time,step, i == 0? Istim : 0.0);
+		if (i == 0)
+			Step(&cells[i],HT,despath,&time,step, Istim);
+		else if ( i==99)
+			Step(&cells[i],HT,despath,&time,step, Istim2);
+		else 
+			Step(&cells[i],HT,despath,&time,step, 0);
 
 		cells[i].Volt += HT* 0.00154*((v_right+V_left-2*V_i)/(dx*dx));
 
