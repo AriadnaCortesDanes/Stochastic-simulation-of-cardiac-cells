@@ -156,12 +156,12 @@ int i_low=0,i_high=1;
 int j_low=0,j_high=1;
 double stimduration=1.0;
 double stimstrength=-52;
-double stimstrength2=-52;
+double stimstrength2=-20;
 double period=1000;
 double sum=period*1000.;
 double tbegin=0;
 double tend=tbegin+stimduration;
-double tbegin2=515;
+double tbegin2=513.22;
 double tend2=tbegin2+stimduration;
 #endif
 

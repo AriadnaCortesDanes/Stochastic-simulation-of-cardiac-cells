@@ -275,26 +275,26 @@ void Step(Variables *V, double HT, char *despath, double *tt, int step, double I
   Ki += HT * dKi;
 
   // write currents to file
-  if (step % 250 == 0)
-  {
-    sprintf(s, "%s%s", despath, "/Currents_mod2.csv");
-    FF = fopen(s, "a");
-    fprintf(FF, "%4.10f,", (*tt));
-    fprintf(FF, "%4.10f,", IKr);
-    fprintf(FF, "%4.10f,", IKs);
-    fprintf(FF, "%4.10f,", IK1);
-    fprintf(FF, "%4.10f,", Ito);
-    fprintf(FF, "%4.10f,", INa);
-    fprintf(FF, "%4.10f,", IbNa);
-    fprintf(FF, "%4.10f,", INaK);
-    fprintf(FF, "%4.10f,", ICaL);
-    fprintf(FF, "%4.10f,", IbCa);
-    fprintf(FF, "%4.10f,", INaCa);
-    fprintf(FF, "%4.10f,", Irel);
-    fprintf(FF, "%4.10f", Istim);
-    fprintf(FF, "\n");
-    fclose(FF);
-  }
+  // if (step % 250 == 0)
+  // {
+  //   sprintf(s, "%s%s", despath, "/Currents_mod2.csv");
+  //   FF = fopen(s, "a");
+  //   fprintf(FF, "%4.10f,", (*tt));
+  //   fprintf(FF, "%4.10f,", IKr);
+  //   fprintf(FF, "%4.10f,", IKs);
+  //   fprintf(FF, "%4.10f,", IK1);
+  //   fprintf(FF, "%4.10f,", Ito);
+  //   fprintf(FF, "%4.10f,", INa);
+  //   fprintf(FF, "%4.10f,", IbNa);
+  //   fprintf(FF, "%4.10f,", INaK);
+  //   fprintf(FF, "%4.10f,", ICaL);
+  //   fprintf(FF, "%4.10f,", IbCa);
+  //   fprintf(FF, "%4.10f,", INaCa);
+  //   fprintf(FF, "%4.10f,", Irel);
+  //   fprintf(FF, "%4.10f", Istim);
+  //   fprintf(FF, "\n");
+  //   fclose(FF);
+  // }
 
   // compute steady state values and time constants
   AM = 1. / (1. + exp((-60. - svolt) / 5.));
