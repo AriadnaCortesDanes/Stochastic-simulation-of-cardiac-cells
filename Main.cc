@@ -156,13 +156,14 @@ int i_low=0,i_high=1;
 int j_low=0,j_high=1;
 double stimduration=1.0;
 double stimstrength=-52;
-double stimstrength2=-20;
+double stimduration2=0.02;
+double stimstrength2=-1000;
 double period=1000;
 double sum=period*1000.;
 double tbegin=0;
 double tend=tbegin+stimduration;
-double tbegin2=513.22;
-double tend2=tbegin2+stimduration;
+double tbegin2=512.81999;
+double tend2=tbegin2+stimduration2;
 #endif
 
 
@@ -374,7 +375,7 @@ int main(int argc, char *argv[])
 	{
 	  Istim2=0.;
 	  tbegin2=tbegin2+period;
-	  tend2=tbegin2+stimduration;
+	  tend2=tbegin2+stimduration2;
 	}
 #endif
 
@@ -464,7 +465,7 @@ int main(int argc, char *argv[])
 		double V_i = cells[i].Volt;
 		if (i == 0)
 			Step(&cells[i],HT,despath,&time,step, Istim);
-		else if ( i==99)
+		else if ( i==99 || i==100 || i==101 || i==102 || i==103)
 			Step(&cells[i],HT,despath,&time,step, Istim2);
 		else 
 			Step(&cells[i],HT,despath,&time,step, 0);
