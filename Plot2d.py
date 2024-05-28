@@ -21,7 +21,7 @@ matrix_shape = (100,100)
 # First set up the figure, the axis, and the plot element we want to animate
 fig = plt.figure( figsize=matrix_shape )
 
-im = plt.imshow(np.reshape(np.array(df.iloc[0]),matrix_shape), interpolation='none', aspect='auto', vmin=-90, vmax=30)
+im = plt.imshow(np.reshape(np.array(df.iloc[0]),matrix_shape), interpolation='bicubic', aspect='auto', vmin=-90, vmax=30)
 title = plt.title(f"Simulation T= {0} ms")
 
 def animate_func(i):
