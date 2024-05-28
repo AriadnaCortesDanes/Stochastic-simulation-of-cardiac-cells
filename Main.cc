@@ -122,9 +122,9 @@ double KpCa=0.0005;
 double GpK=0.0146;
 
 // Mesh of cells
-int n_cells_rows = 100;
-int n_cells_cols = 100;
-double dx = 0.1; // distance between cells, cm
+int n_cells_rows = 200;
+int n_cells_cols = 200;
+double dx = 0.02; // distance between cells, cm
 
 // Saving parameters
 // std::string file_name = "/Voltages_test_Q1.csv";
@@ -149,7 +149,7 @@ double Ki_init=138.3;
              PARAMETER FOR SIMULATION DURATION
   ---------------------------------------------------------------------------*/
 //duration of the simulation 
-double STOPTIME=1000;
+double STOPTIME=2000;
 
 /*-----------------------------------------------------------------------------
   PARAMETERS FOR STIMULATION PROTOCOLS 
@@ -159,8 +159,8 @@ double STOPTIME=1000;
 double tstart_stim_1 = 0;
 double tend_stim_1 = 1;
 double stimstrength_1 = -52;
-double tstart_stim_2 = 310;
-double tend_stim_2 = 311;
+double tstart_stim_2 = 300;
+double tend_stim_2 = 301;
 double stimstrength_2 = -52;
 
 // #ifdef DYNRESTPROTOCOL
@@ -315,7 +315,7 @@ int main(int argc, char *argv[])
   for (int i = 0; i <n_cells_rows; i++) {
 	for (int j = 0; j < n_cells_cols; j++) {
 		i==0 ? Istim1_M[i][j] = stimstrength_1 : Istim1_M[i][j] = 0;
-		(i<n_cells_rows/2&&j<n_cells_cols/2) ? Istim2_M[i][j] = stimstrength_2 : Istim2_M[i][j] = 0;
+		(i<n_cells_rows/2&&j<3*n_cells_cols/4) ? Istim2_M[i][j] = stimstrength_2 : Istim2_M[i][j] = 0;
 	}
   }
 
@@ -374,7 +374,7 @@ int main(int argc, char *argv[])
 
 	// if (step ==5) return 0;
 
-    if(step % 250 ==0) {
+    if(step % 50 ==0) {
 		//std::cout<<time<<std::endl;
 		static char filename[300];
 		sprintf(filename,"%s%s",despath,"/Voltages.csv"); 
