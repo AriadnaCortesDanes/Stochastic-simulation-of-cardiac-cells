@@ -22,6 +22,7 @@ calculating propagation speeds and the creation and propagation of spiral waves 
 reentry arrhythmias, as well as an stochastic 2D tissue simulation. Finally, a pseudo-ECG signal is
 computed and compared with real ECG signals for reentry tachycardias.   
 
+For a general quantitative overview, please read the project paper `Projecte_Pef2_v1.pdf`.   
 
 *Simulation of 2-D tissue, propagation of a spiral potential wave simulating a reentry tachycardia*
 ![Spiral](https://github.com/user-attachments/assets/77ed8688-639c-4b9e-a5b2-daaaa64d778b)   
