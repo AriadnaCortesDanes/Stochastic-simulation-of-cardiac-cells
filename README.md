@@ -1,7 +1,19 @@
 # Computational stochastic modeling of human ventricular myocardium  
 
 **Keywords**: Computational biology, electrophysiology, stochastic modeling, spiral waves   
-   
+### Linux   
+To compile (through *Makefile*)   
+ &nbsp;&nbsp;  `make model`   
+To run   
+  &nbsp;&nbsp; `./model dataDestinationFolder`   
+### Windows   
+To compile   
+  &nbsp;&nbsp;  `g++ -O2 -o model Header.h Step.cc Variables.h Variables.cc Main.cc`    
+To run   
+  &nbsp;&nbsp; `./model dataDestinationFolder`   
+the folder needs to be a previously existing one (code will not dynamically create it).   
+
+## Project overview   
 Mathematical models of the action potential of human heart cells have been of great importance
 in the study of the electrophysiological behaviour of the human ventricular myocardium. In this
 work, we present the extension of the known Ten Tusscher model to study stochastic evolution via
@@ -18,7 +30,7 @@ computed and compared with real ECG signals for reentry tachycardias.
 ![ECG_comparison](https://github.com/user-attachments/assets/c3c764e3-c6bc-4257-8a98-9727062f9133)
 
 
-*Studying spontaneous stimulations due to stochastic limit behavior*
+*Studying spontaneous stimulations due to stochastic limit behavior (1D potential and gate analysis and 2D visualization)*
 ![Comparison2](https://github.com/user-attachments/assets/f828f1ef-8cbc-49ad-b684-da77cadf6ac9)
 ![binomicevolution](https://github.com/user-attachments/assets/6297e34c-864a-4daa-bd97-356373025486)
 
