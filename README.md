@@ -1,4 +1,4 @@
-# Stochastic-simulation-of-cardiac-cells   
+# Computational stochastic modeling of human ventricular myocardium  
 
 **Keywords**: Computational biology, electrophysiology, stochastic modeling, spiral waves   
    
