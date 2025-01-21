@@ -3,11 +3,15 @@
 **Keywords**: Computational biology, electrophysiology, stochastic modeling, spiral waves   
 ### Linux   
 To compile (through *Makefile*)   
+ &nbsp;&nbsp;  `cd src`  
  &nbsp;&nbsp;  `make model`   
 To run   
-  &nbsp;&nbsp; `./model dataDestinationFolder`   
+  &nbsp;&nbsp; `./model dataDestinationFolder`  
+the folder needs to be a previously existing one (code will not dynamically create it).   
+ 
 ### Windows   
 To compile   
+  &nbsp;&nbsp;  `cd src`  
   &nbsp;&nbsp;  `g++ -O2 -o model Header.h Step.cc Variables.h Variables.cc Main.cc`    
 To run   
   &nbsp;&nbsp; `./model dataDestinationFolder`   
